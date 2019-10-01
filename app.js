@@ -15,14 +15,15 @@ io.on('connection',function(socket){
 //new user 
     socket.on('new user', function(data, callback){
 
-        if (nicknames.hasOwnProperty(data) != -1){
+        if (nicknames.hasOwnProperty(data)){ //We check if data received is in nicknames array
             callback(false);
         } else{
             callback(true);
             socket.nickname = data;
-            nicknames[socket.nickname]={online:true};
+            nicknames[socket.nickname] = {online: true}; //Then we put an object with a variable online
                 console.log('user connected: ' + socket.nickname);
         //  io.emit('update_personal', nicknames + ': Online');
+        
             updateNicknames();
         }
     });
@@ -42,12 +43,13 @@ io.on('connection',function(socket){
 
 //disconnected service
 
-    socket.on('disconnect', function(data){
-        console.log('user disconnected:' + socket.nickname )
-        if(!socket.nickname) return;
-        nicknames[socket.nickname].online=false;
-        updateNicknames();
-    });
+socket.on('disconnect', function(data){
+    console.log('user disconnected:' + socket.nickname )
+    if(!socket.nickname) return;
+    nicknames[socket.nickname].online = false; //We dont splie nickname from array but change online state to false
+    updateNicknames();
+});
+    
 });
 
 http.listen(PORT, function(){
