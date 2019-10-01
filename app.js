@@ -4,7 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 
-nicknames = [];
+nicknames = {};
 app.get('/', function(req, res){
     res.sendFile('index.html', { root: './'});
 });
@@ -15,15 +15,15 @@ io.on('connection',function(socket){
 //new user 
     socket.on('new user', function(data, callback){
 
-        if (nicknames.indexOf(data) != -1){
+        if (nicknames.hasOwnProperty(data)){ //We check if data received is in nicknames array
             callback(false);
         } else{
             callback(true);
             socket.nickname = data;
-            nicknames.push(socket.nickname);
+            nicknames[socket.nickname] = {online: true}; //Then we put an object with a variable online
                 console.log('user connected: ' + socket.nickname);
         //  io.emit('update_personal', nicknames + ': Online');
-
+        
             updateNicknames();
         }
     });
@@ -43,13 +43,13 @@ io.on('connection',function(socket){
 
 //disconnected service
 
-    socket.on('disconnect', function(data){
-        console.log('user disconnected:' + socket.nickname )
-        if(!socket.nickname) return;
-        nicknames.splice(nicknames.indexOf(socket.nickname), 1);
-        updateNicknames();
-    });
-
+socket.on('disconnect', function(data){
+    console.log('user disconnected:' + socket.nickname )
+    if(!socket.nickname) return;
+    nicknames[socket.nickname].online = false; //We dont splie nickname from array but change online state to false
+    updateNicknames();
+});
+    
 });
 
 http.listen(PORT, function(){
