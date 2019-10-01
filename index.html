@@ -60,9 +60,17 @@
 //list the user who connected
         socket.on('usernames', function(data){
             var html = '';
-            for(i=0; i < data.length; i++){
-                html += data[i] + '<br/>'
+            for(nickname in data){
+              var isNicknameOnline = data[nickname].online //Get the online state
+
+              if (isNicknameOnline)
+             {
+              var status = '<font color=green><b>Yes</b></font>';
+             }else{
+              var status = '<font color=red><b>No</b></font>'
             }
+            html += nickname + ' (Online: ' + status + ')<br/>' //print the status
+          }
               $('#users').html(html);
         });
 
