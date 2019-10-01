@@ -58,28 +58,14 @@
         });
 
 //list the user who connected
-socket.on('usernames', function(data){
-    var html = '';
-    for (var nickname in data) //Foreach all nicknames received in data
-    {
-        var isNicknameOnline = data[nickname].online //Get the online state
+        socket.on('usernames', function(data){
+            var html = '';
+            for(i=0; i < data.length; i++){
+                html += data[i] + '<br/>'
+            }
+              $('#users').html(html);
+        });
 
-        //We test the online status
-        if (isNicknameOnline)
-        {
-            var status = '<font color=green><b>Yes</b></font>'
-        }
-        else
-        {
-            var status = '<font color=red><b>No</b></font>'
-        }
-
-        html += nickname + ' (Online: ' + status + ')<br/>' //print the status
-    }
-    $('#users').html(html);
-});
-
-        
 //send the message
         $('#send-message').submit(function(e){
           e.preventDefault();
