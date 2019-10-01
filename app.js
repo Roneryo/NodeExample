@@ -22,7 +22,7 @@ io.on('connection',function(socket){
             socket.nickname = data;
             nicknames.push(socket.nickname);
                 console.log('user connected: ' + socket.nickname);
-        //  io.emit('update_personal', nicknames + ': Online');
+         io.emit('update_personal', nicknames + ': Online');
 
             updateNicknames();
         }
