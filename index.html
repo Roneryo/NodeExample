@@ -1,6 +1,7 @@
 <head>
     <title>Socket.IO chat</title>
         <script src="/socket.io/socket.io.js"></script>
+        <script src="jquery-3.4.1.min.js"></script>
         <style>
     #chat{
             height:500px;
@@ -16,63 +17,62 @@
   </head>
   <body>
     <div id="nickWrap">
-      <p>Enter a username:</p>
-      <p id="nickError"></p>
-      <form id="setNick">
-        <input size="35" id="nickname"></input>
-        <input type="submit"></input>
-      </form>
-    </div>
-    
-    <div id="contentWrap">
-      <div id="chatWrap">
-        <div id="chat"></div>
-        <form id="send-message">
-          <input size="35" id="message"></input>
-          <input type="submit"></input>
+        <p>Enter a username:</p>
+        <p id="nickError"></p>
+        <form id="setNick">
+            <input size="35" id="nickname"></input>
+            <input type="submit"></input>
         </form>
-      </div>
-      <div id="users"></div>
-      
     </div>
-    
+
+    <div id="contentWrap">
+        <div id="chatWrap">
+            <div id="chat"></div>
+            <form id="send-message">
+                <input size="35" id="message"></input>
+                <input type="submit"></input>
+            </form>
+        </div>
+        <div id="users"></div>
+
+    </div>
+
     <script>
-      var socket = io.connect();
-      
-      // add username
-      $('#setNick').submit(function(e){
-        e.preventDefault();
-        socket.emit('new user', $('#nickname').val(), function(data){
-          if(data){
-            $('#nickWrap').hide();
-            $('#contentWrap').show();
-          } else{
+            var socket = io.connect();
+
+// add username
+        $('#setNick').submit(function(e){
+          e.preventDefault();
+          socket.emit('new user', $('#nickname').val(), function(data){
+            if(data){
+              $('#nickWrap').hide();
+              $('#contentWrap').show();
+            } else{
             $('#nickError').html('That username is already taken!  Try again.');
             }
           });
           $('#nickname').val('');
         });
-        
-        //list the user who connected
+
+//list the user who connected
         socket.on('usernames', function(data){
-          var html = '';
-          for(i=0; i < data.length; i++){
-            html += data[i] + '<br/>'
-          }
-          $('#users').html(html);
+            var html = '';
+            for(i=0; i < data.length; i++){
+                html += data[i] + '<br/>'
+            }
+              $('#users').html(html);
         });
-        
-        //send the message
+
+//send the message
         $('#send-message').submit(function(e){
           e.preventDefault();
           socket.emit('send message', $('#message').val());
           $('#message').val('');
         });
-        
+
         socket.on('new message', function(data){
           $('#chat').append('<b>' + data.nick + ': </b>' + data.msg + "<br/>");
         });
-        
-        </script>
-        <script src="jquery-3.4.1.min.js"></script>
+
+    </script>
     </body>
