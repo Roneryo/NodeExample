@@ -3,7 +3,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.use(express.static('client'));
+app.use(require('express').static('espress'));
 
 nicknames = [];
 app.get('/', function(req, res){
